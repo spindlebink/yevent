@@ -10,33 +10,33 @@ YEvent is a tiny (~100 LOC), speedy, compile-time type-safe event system in Crys
 
 ```crystal
 struct EventType
-	include YEvent::Event
+  include YEvent::Event
 
-	def initialize(@value = 10)
-	end
+  def initialize(@value = 10)
+  end
 
-	def do_thing
-		puts "Doing the thing: #{@value}"
-	end
+  def do_thing
+    puts "Doing the thing: #{@value}"
+  end
 end
 
 class ListeningObject
-	include YEvent::Listener
+  include YEvent::Listener
 end
 
 class OtherObject
-	# `ListenFor` annotation allows you to connect instance methods at declaration
-	@[ListenFor(EventType)]
-	def custom_listener(target, event)
-		event.do_thing
-	end
+  # `ListenFor` annotation allows you to connect instance methods at declaration
+  @[ListenFor(EventType)]
+  def custom_listener(target, event)
+    event.do_thing
+  end
 end
 
 object = ListeningObject.new
 
 object.listen_for EventType do |target, event|
-	# `target` is the receiver of the event; `event` is the event instance
-	event.custom_method
+  # `target` is the receiver of the event; `event` is the event instance
+  event.custom_method
 end
 
 object.listening_for? EventType # true
@@ -49,11 +49,11 @@ object.emit_event EventType.new(50)
 YEvent's predecessor used an `Event` type and a hash table of symbols mapping to stored callbacks. It worked fine and was transparent and simple, but there was a lurking sense of danger and boilerplate attached to listener code, since events were sent as `Event+`:
 ```crystal
 object.listen_for :event_name do |event|
-	if event.is_a? DesiredEventType
-		event.now_we_can_do_stuff
-	else
-		puts "how did a non-DesiredEventType even get in here??"
-	end
+  if event.is_a? DesiredEventType
+    event.now_we_can_do_stuff
+  else
+    puts "how did a non-DesiredEventType even get in here??"
+  end
 end
 ```
 Forget to add the check even once and exceptions could creep in, but only down the line, long after I'd forgotten not to forget that I'd forgotten to add the check.
