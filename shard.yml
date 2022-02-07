@@ -1,0 +1,5 @@
+name: yevent
+version: 0.1.0
+crystal: ">= 1.0.0"
+
+description: "A type-safe event listener observer pattern library."
